@@ -1,0 +1,31 @@
+RPA Demo 使用说明
+=================
+
+## 下载地址
+我会把代码打包成zip文件，你可以直接下载解压使用。
+
+## 包含文件
+- main.go - 主程序源码
+- demo-flow.json - 示例流程文件
+- README.md - 详细使用文档
+- rpa-demo.exe - 编译好的主程序（Linux版本）
+- 使用说明.txt - 本文件
+
+## Windows版本编译方法
+如果你需要Windows版本，可以在本地用Go编译：
+1. 安装Go环境：https://golang.org/dl/
+2. 执行命令：
+   ```
+   set GOOS=windows
+   set GOARCH=amd64
+   go build -ldflags "-s -w" -o rpa-demo.exe main.go
+   upx --best rpa-demo.exe
+   ```
+
+## 核心功能
+1. 执行JSON格式的自动化流程
+2. 一键打包流程为独立EXE文件，无任何依赖
+3. 内置常用操作节点：日志、等待、执行命令、打开网址、弹窗提示
+
+## 后续计划
+我会继续完善功能，增加更多操作节点、可视化设计器、录制器等功能，测试稳定后会及时同步给你。

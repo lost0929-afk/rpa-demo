@@ -1,0 +1,25 @@
+Windows版本使用说明
+=====================
+
+## 两个版本说明
+1. **rpa-demo-windows-cli.exe** - 命令行版本，双击会显示控制台窗口，适合调试用
+2. **rpa-demo-windows-gui.exe** - 无控制台窗口版本，适合打包发布用
+
+## 使用方法
+1. 打开cmd或者PowerShell
+2. 执行示例流程：
+   ```cmd
+   rpa-demo-windows-cli.exe -flow demo-flow.json
+   ```
+3. 打包流程为独立EXE：
+   ```cmd
+   rpa-demo-windows-cli.exe -build demo-flow.json -output 我的自动化工具.exe
+   ```
+
+## 测试步骤
+1. 先运行命令行版本看是否正常显示帮助信息
+2. 然后测试执行示例流程，看是否能正常弹出提示、打开百度
+3. 最后测试打包功能，看生成的独立EXE是否能正常运行
+
+## 闪退问题解决
+如果双击闪退是正常现象，因为这是命令行程序，需要带参数运行。如果想直接双击查看帮助，可以创建一个快捷方式，在目标后面加上`--help`参数。

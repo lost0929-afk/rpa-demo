@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"time"
+	"runtime"
 )
 
 // 流程节点定义
@@ -48,7 +49,13 @@ func executeNode(node Node, ctx *Context) error {
 		cmd, ok := node.Params["command"].(string)
 		if ok {
 			fmt.Printf("[执行命令] %s\n", cmd)
-			output, err := exec.Command("cmd", "/c", cmd).CombinedOutput()
+			var cmdExec *exec.Cmd
+			if runtime.GOOS == "windows" {
+				cmdExec = exec.Command("cmd", "/c", cmd)
+			} else {
+				cmdExec = exec.Command("bash", "-c", cmd)
+			}
+			output, err := cmdExec.CombinedOutput()
 			if err != nil {
 				fmt.Printf("命令执行错误: %v\n", err)
 			}
@@ -58,13 +65,27 @@ func executeNode(node Node, ctx *Context) error {
 		url, ok := node.Params["url"].(string)
 		if ok {
 			fmt.Printf("[打开浏览器] %s\n", url)
-			exec.Command("cmd", "/c", "start", url).Start()
+			var cmdExec *exec.Cmd
+			if runtime.GOOS == "windows" {
+				cmdExec = exec.Command("cmd", "/c", "start", url)
+			} else if runtime.GOOS == "darwin" {
+				cmdExec = exec.Command("open", url)
+			} else {
+				cmdExec = exec.Command("xdg-open", url)
+			}
+			cmdExec.Start()
 		}
 	case "message_box":
 		text, ok := node.Params["text"].(string)
 		if ok {
 			fmt.Printf("[弹窗] %s\n", text)
-			exec.Command("cmd", "/c", "msg", "*", text).Run()
+			if runtime.GOOS == "windows" {
+				exec.Command("cmd", "/c", "msg", "*", text).Run()
+			} else if runtime.GOOS == "darwin" {
+				exec.Command("osascript", "-e", fmt.Sprintf(`display dialog "%s" buttons {"OK"} default button "OK"`, text)).Run()
+			} else {
+				exec.Command("notify-send", "RPA提示", text).Run()
+			}
 		}
 	}
 	return nil
@@ -195,4 +216,11 @@ func main() {
 	fmt.Println("1. 执行流程: rpa-demo.exe -flow 流程文件.json")
 	fmt.Println("2. 打包为独立EXE: rpa-demo.exe -build 流程文件.json -output 输出.exe")
 	fmt.Println("\n示例流程格式见 demo-flow.json")
+	
+	// Windows下双击运行时保持窗口不关闭
+	if runtime.GOOS == "windows" && len(os.Args) == 1 {
+		fmt.Println("\n按任意键退出...")
+		var b []byte = make([]byte, 1)
+		os.Stdin.Read(b)
+	}
 }
