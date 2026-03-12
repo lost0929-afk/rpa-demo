@@ -1,0 +1,47 @@
+{
+  "name": "演示流程",
+  "description": "这是一个RPA演示流程，会打开百度、弹出提示、等待3秒后提示完成",
+  "start_node": "node1",
+  "nodes": {
+    "node1": {
+      "id": "node1",
+      "type": "log",
+      "params": {
+        "message": "流程开始执行..."
+      },
+      "next_node": "node2"
+    },
+    "node2": {
+      "id": "node2",
+      "type": "message_box",
+      "params": {
+        "text": "欢迎使用RPA Demo！点击确定开始执行流程"
+      },
+      "next_node": "node3"
+    },
+    "node3": {
+      "id": "node3",
+      "type": "open_url",
+      "params": {
+        "url": "https://www.baidu.com"
+      },
+      "next_node": "node4"
+    },
+    "node4": {
+      "id": "node4",
+      "type": "delay",
+      "params": {
+        "seconds": 3
+      },
+      "next_node": "node5"
+    },
+    "node5": {
+      "id": "node5",
+      "type": "message_box",
+      "params": {
+        "text": "流程执行完成！"
+      },
+      "next_node": ""
+    }
+  }
+}
